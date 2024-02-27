@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class qrCode {
 
+    final String ANSI_RED = "\u001B[31m";
+    final String ANSI_RESET = "\u001B[0m";
+
     private SwiftBotAPI API;
 
     public qrCode(SwiftBotAPI api) {
@@ -53,8 +56,14 @@ public class qrCode {
                     side3 = Integer.parseInt(partsList.get(3));
 
                 } else {
-                    System.out.println("No shape found.");
+                    System.out.println(" ");
+                    System.out.println(ANSI_RED + "No Shape Found");
+                    System.out.println(" ");
                 }
+            } else {
+                System.out.println(" ");
+                System.out.println(ANSI_RED + "No QR Code Found" + ANSI_RESET);
+                System.out.println(" ");
             }
 
         } catch (Exception e) {
@@ -62,4 +71,3 @@ public class qrCode {
         }
     }
 }
-
