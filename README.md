@@ -1,7 +1,9 @@
-# Draw Shapes
+# Task 8: Draw Shapes
 
-#### Task 8
-#### 2303500
+* Name: Atharva Choudhary
+* ID: 2303500
+* Group: A 04
+* Tutor: Zear Ibrahim
 
 ## How to compile and run all the files?
 #### Compile All Files Toegther: javac -cp "SwiftBotAPI-5.1.0.jar" *.java
