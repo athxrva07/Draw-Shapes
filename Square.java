@@ -21,7 +21,8 @@ public class Square {
                 System.out.println(" ");
                 System.out.println(ANSI_GREEN + "<< Swiftbot Is Drawing a Square >>" + ANSI_RESET);
 
-                int toMove = side * 10; // calculates the time the swiftbot should move for to draw the side
+                // calculates the time the swiftbot should move for to draw the side
+                int toMove = side * 80;
 
                 for (int i = 0; i < 4; i++) {
                     API.move(100, 100, toMove);
