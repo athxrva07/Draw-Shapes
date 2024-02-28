@@ -9,8 +9,16 @@ import java.util.Scanner;
 import swiftbot.*;
 
 public class Main {
-    public static void main(String[] args) {
+    // Define lists and maps to store shape information
+    static List<String> shapeInfoList = new ArrayList<>();
+    static List<Double> triangleAngles = new ArrayList<>();
+    static Map<String, Double> shapeAreas = new HashMap<>();
+    static String largestShape = "";
+    static double largestArea = Double.MIN_VALUE;
+    static Map<String, Integer> shapeCounts = new HashMap<>();
+    static List<Long> timeTakenList = new ArrayList<>(); // List to store time taken for each drawing action
 
+    public static void main(String[] args) {
         // Initialize SwiftBotAPI and other necessary objects
         SwiftBotAPI API = new SwiftBotAPI();
         Square obj1 = new Square(API);
@@ -23,14 +31,6 @@ public class Main {
         final String ANSI_GREEN = "\u001B[32m";
         final String ANSI_RED = "\u001B[31m";
         final String ANSI_RESET = "\u001B[0m";
-
-        // Initialize lists and maps to store shape information
-        List<String> shapeInfoList = new ArrayList<>();
-        List<Double> triangleAngles = new ArrayList<>();
-        Map<String, Double> shapeAreas = new HashMap<>();
-        String largestShape = "";
-        double largestArea = Double.MIN_VALUE;
-        Map<String, Integer> shapeCounts = new HashMap<>();
 
         // Display welcome message
         System.out.println();
@@ -52,12 +52,22 @@ public class Main {
             // Perform actions based on user's choice
             switch (choice) {
                 case 1:
+                    // Record the start time before drawing the shape
+                    long startTime = System.currentTimeMillis();
+
                     // If option 1 is selected, decode QR code and determine the shape
                     obj3.decodeQR();
                     String shape = obj3.shape;
 
                     // Process based on the detected shape
                     if ("S".equals(shape)) {
+                        // Record the end time after drawing the shape
+                        long endTime = System.currentTimeMillis();
+                        // Calculate the time taken for drawing the shape
+                        long timeTaken = endTime - startTime;
+                        // Add the time taken to the list
+                        timeTakenList.add(timeTaken);
+
                         // If the shape is a square, draw it and calculate its area
                         int sideSquare = obj3.side;
                         // checks if side is greater than 15 and less than 85 or not
@@ -82,6 +92,13 @@ public class Main {
                             System.out.println(" ");
                         }
                     } else if ("T".equals(shape)) {
+                        // Record the end time after drawing the shape
+                        long endTime = System.currentTimeMillis();
+                        // Calculate the time taken for drawing the shape
+                        long timeTaken = endTime - startTime;
+                        // Add the time taken to the list
+                        timeTakenList.add(timeTaken);
+
                         // If the shape is a triangle, draw it, calculate its area and angle
                         int side1 = obj3.side1;
                         int side2 = obj3.side2;
@@ -158,6 +175,14 @@ public class Main {
                         }
                         writer.println(
                                 "Most Frequently Drawn Shape: " + mostFrequentShape + " (" + maxCount + " times)");
+
+                        // Calculate average time taken
+                        long total = 0;
+                        for (long time : timeTakenList) {
+                            total += time;
+                        }
+                        double averageTime = (double) total / timeTakenList.size();
+                        writer.println("Average Time Taken to Draw: " + averageTime + " milliseconds");
 
                         writer.close();
                     } catch (Exception e) {
