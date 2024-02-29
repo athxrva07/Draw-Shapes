@@ -1,9 +1,6 @@
-# Task 8: Draw Shapes
+# Draw Shapes Project
 
-* Name: Atharva Choudhary
-* ID: 2303500
-* Group: A 04
-* Tutor: Zear Ibrahim
+This is my first year CS project. Swiftbot (a raspberry pi robot ) scans a QR code and decodes it. It moves to draw either a square or a triangle, based on the decoded text. When 'button X' is pressed, it created a text file containing information about the shapes drawn. 
 
 ## How to compile and run the program?
 #### Compile All Files Toegther: 
