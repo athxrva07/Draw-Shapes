@@ -45,32 +45,32 @@ public class Triangle {
             int toTurnB = (180 - angleBint) * 5;
 
             // Calculate lengths to draw each side of the triangle
-            int drawSide1 = side1 * 10;
-            int drawSide2 = side2 * 10;
-            int drawSide3 = side3 * 10;
+            int drawSide1 = side1 * 20;
+            int drawSide2 = side2 * 20;
+            int drawSide3 = side3 * 20;
 
             System.out.println(" ");
             // Display message indicating triangle drawing has started
             System.out.println(ANSI_GREEN + "<< Swiftbot Is Drawing a Triangle >>" + ANSI_RESET);
 
             // Move Swiftbot to draw the first side of the triangle
-            API.move(100, 94, drawSide1);
+            API.move(50, 50, drawSide1);
             API.move(0, 0, 1000);
 
             // Turn Swiftbot to draw the second side of the triangle
             API.move(100, -98, toTurnA);
             API.move(0, 0, 1000);
 
-            // Move Swiftbot to draw the third side of the triangle
-            API.move(100, 94, drawSide2);
+            // Move Swiftbot to draw the second side of the triangle
+            API.move(50, 50, drawSide2);
             API.move(0, 0, 1000);
 
-            // Turn Swiftbot to draw the fourth side of the triangle
+            // Turn Swiftbot to draw the third side of the triangle
             API.move(100, -98, toTurnB);
             API.move(0, 0, 1000);
 
-            // Move Swiftbot to draw the fifth side of the triangle
-            API.move(100, 94, drawSide3);
+            // Move Swiftbot to draw the third side of the triangle
+            API.move(50, 50, drawSide3);
             API.move(0, 0, 1000);
 
             // Turn on the underlights
