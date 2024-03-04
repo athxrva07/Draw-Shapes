@@ -15,7 +15,7 @@ public class Main {
     static String largestShape = "";
     static double largestArea = Double.MIN_VALUE;
     static Map<String, Integer> shapeCounts = new HashMap<>();
-    static List<Long> timeTakenList = new ArrayList<>(); // sist to store time taken for drawing each shape
+    static List<Long> timeTakenList = new ArrayList<>(); // list to store time taken for drawing each shape
 
     public static void main(String[] args) {
 
@@ -209,6 +209,7 @@ public class Main {
                 total += time;
             }
             double averageTime = (double) total / timeTakenList.size();
+        
             writer.println("Average Time Taken to Draw: " + averageTime + " milliseconds");
 
             writer.close();
