@@ -25,54 +25,57 @@ public class QRCode {
 
     // method to decode the QR code
     public void decodeQR() {
-
         // ArrayList to store the decoded text
         ArrayList<String> decodedInfo = new ArrayList<>();
-
+    
         try {
             BufferedImage img = API.getQRImage();
-
             String decodedText = API.decodeQRImage(img);
-
+    
             if (!decodedText.isEmpty()) {
                 // splits the decoded text
                 String[] parts = decodedText.split(" ");
-
-                // adds the decoded text to the ArrayList
+    
+                // adds the decoded text to the ArrayList, trimming each part to remove whitespace characters
                 for (String part : parts) {
-                    decodedInfo.add(part);
+                    decodedInfo.add(part.trim());
                 }
-
+    
                 if (decodedInfo.get(0).equals("S")) {
-                    
                     String decodedShape = "S";
                     shape = decodedShape;
-
-                    side = Integer.parseInt(decodedInfo.get(1));
-                } 
-                else if (decodedInfo.get(0).equals("T")) {
-                    
+    
+                    // Parsing side length for square with error handling
+                    try {
+                        side = Integer.parseInt(decodedInfo.get(1));
+                    } catch (NumberFormatException e) {
+                        System.out.println(ANSI_RED + "Error parsing side length for square: " + e.getMessage());
+                    }
+                } else if (decodedInfo.get(0).equals("T")) {
                     String decodedShape = "T";
                     shape = decodedShape;
-
-                    side1 = Integer.parseInt(decodedInfo.get(1));
-                    side2 = Integer.parseInt(decodedInfo.get(2));
-                    side3 = Integer.parseInt(decodedInfo.get(3));
-                } 
-                else {
+    
+                    // Parsing side lengths for triangle with error handling
+                    try {
+                        side1 = Integer.parseInt(decodedInfo.get(1));
+                        side2 = Integer.parseInt(decodedInfo.get(2));
+                        side3 = Integer.parseInt(decodedInfo.get(3));
+                    } catch (NumberFormatException e) {
+                        System.out.println(ANSI_RED + "Error parsing side lengths for triangle: " + e.getMessage());
+                    }
+                } else {
                     System.out.println(" ");
                     System.out.println(ANSI_RED + "No Shape Found");
                     System.out.println(" ");
                 }
-            } 
-            else {
+            } else {
                 System.out.println(" ");
                 System.out.println(ANSI_RED + "No QR Code Found" + ANSI_RESET);
                 System.out.println(" ");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
 }
