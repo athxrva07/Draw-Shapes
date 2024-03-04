@@ -17,7 +17,8 @@ public class Triangle {
     // Method to check if a triangle can be formed with given side lengths
     public String isTriangle(int side1, int side2, int side3) {
         try {
-            if ((side1 + side2 > side3) && (side1 + side3 > side2) && (side2 + side3 > side1)) {
+            if ((side1 + side2 > side3) && (side1 + side3 > side2) && (side2 + side3 > side1)
+                    && (side1 > 15 && side1 < 85) && (side2 > 15 && side2 < 85) && (side3 > 15 && side3 < 85)) {
                 return "true";
             } else {
                 return "false";
@@ -45,9 +46,9 @@ public class Triangle {
             int toTurnB = (180 - angleBint) * 5;
 
             // Calculate lengths to draw each side of the triangle
-            int drawSide1 = side1 * 20;
-            int drawSide2 = side2 * 20;
-            int drawSide3 = side3 * 20;
+            int drawSide1 = side1 * 80;
+            int drawSide2 = side2 * 80;
+            int drawSide3 = side3 * 80;
 
             System.out.println(" ");
             // Display message indicating triangle drawing has started
