@@ -1,5 +1,4 @@
 import swiftbot.*;
-import java.io.*;
 
 public class Square {
 
@@ -22,7 +21,7 @@ public class Square {
             System.out.println(ANSI_GREEN + "<< Swiftbot Is Drawing a Square >>" + ANSI_RESET);
 
             // calculates the time the swiftbot should move to draw each side of the square
-            int toMove = side * 20;
+            int toMove = side * 80;
 
             // loop to draw each side of the square
             for (int i = 0; i < 4; i++) {
@@ -31,7 +30,7 @@ public class Square {
 
                 // turns the swiftbot by 90 degrees exactly 3 times to complete the square
                 if (i < 3) {
-                    API.move(100, -100, 400); // 400 milliseconds is 90 degrees turn
+                    API.move(100, -100, 410); // 410 milliseconds is 90 degrees turn
                 }
 
                 // Sets the underlight to green when the drawing is finished
