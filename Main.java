@@ -42,7 +42,7 @@ public class Main {
         API.enableButton(Button.A, () -> {
 
             System.out.println(" ");
-            System.out.println("Button A Has Been Pressed");
+            System.out.println(ANSI_CYAN + "Button A Has Been Pressed" + ANSI_CYAN);
 
             // executes case 1 when button A is pressed. This scans the QR code, decodes it
             // and draws the shape accordingly.
@@ -51,7 +51,7 @@ public class Main {
 
         API.enableButton(Button.X, () -> {
 
-            System.out.println("Button X Has Been Pressed");
+            System.out.println(ANSI_CYAN + "Button X Has Been Pressed" + ANSI_CYAN);
 
             // executes case 2 when button X is pressed. This creates the text file to store
             // shape information and then terminates the program
@@ -67,22 +67,17 @@ public class Main {
     private static void executeCase1(Square obj1, Triangle obj2, QRCode obj3, String ANSI_CYAN, String ANSI_GREEN,
             String ANSI_RED, String ANSI_RESET) {
 
-        // calls the decodeQR() method from the QRCode class file
-        obj3.decodeQR();
-        String shape = obj3.shape;
-
         // records the start time before drawing the shape
         long startTime = System.currentTimeMillis();
 
-        if ("S".equals(shape)) {
+        // calls the decodeQR() method from the QRCode class file
+        obj3.decodeQR();
+        String shape = obj3.shape;
+        String toContinue = obj3.Continue;
 
-            int sideSquare = obj3.side;
+        if ("true".equals(toContinue)) {
 
-            // checks if side is greater than 15 and less than 85 or not and draws the
-            // square if it is
-            if (sideSquare > 15 && sideSquare < 85) {
-                obj1.drawSquare(sideSquare);
-
+            if ("S".equals(shape)) {
                 // records the end time after drawing the shape
                 long endTime = System.currentTimeMillis();
                 // calculates the time taken for drawing the shape
@@ -90,34 +85,32 @@ public class Main {
                 // adds the time taken to the list
                 timeTakenList.add(timeTaken);
 
-                double area = sideSquare * sideSquare;
-                System.out.println(ANSI_GREEN + "Area of this square is " + area + "cm sq" + ANSI_RESET);
-                System.out.println(" ");
+                int sideSquare = obj3.side;
 
-                shapeInfoList.add("Square: " + sideSquare);
-                shapeAreas.put("Square", area);
+                // checks if side is greater than 15 and less than 85 or not and draws the
+                // square if it is
+                if (sideSquare > 15 && sideSquare < 85) {
+                    obj1.drawSquare(sideSquare);
 
-                if (area > largestArea) {
-                    largestArea = area;
-                    largestShape = "Square";
+                    double area = sideSquare * sideSquare;
+                    System.out.println(ANSI_GREEN + "Area of this square is " + area + "cm sq" + ANSI_RESET);
+                    System.out.println(" ");
+
+                    shapeInfoList.add("Square: " + sideSquare);
+                    shapeAreas.put("Square", area);
+
+                    if (area > largestArea) {
+                        largestArea = area;
+                        largestShape = "Square";
+                    }
+                    // updates shape counts
+                    shapeCounts.put("Square", shapeCounts.getOrDefault("Square", 0) + 1);
+                } else {
+                    System.out.println(" ");
+                    System.out.println(ANSI_RED + "The Sides Should Be Between 15 and 85" + ANSI_RESET);
+                    System.out.println(" ");
                 }
-                // updates shape counts
-                shapeCounts.put("Square", shapeCounts.getOrDefault("Square", 0) + 1);
-            } else {
-                System.out.println(" ");
-                System.out.println(ANSI_RED + "The Sides Should Be Between 15 and 85" + ANSI_RESET);
-                System.out.println(" ");
-            }
-        } else if ("T".equals(shape)) {
-
-            int side1 = obj3.side1;
-            int side2 = obj3.side2;
-            int side3 = obj3.side3;
-
-            String canForm = obj2.isTriangle(side1, side2, side3);
-            if (canForm.equals("true")) {
-                obj2.drawTriangle(side1, side2, side3);
-
+            } else if ("T".equals(shape)) {
                 // records the end time after drawing the shape
                 long endTime = System.currentTimeMillis();
                 // calculates the time taken for drawing the shape
@@ -125,36 +118,50 @@ public class Main {
                 // adds the time taken to the list
                 timeTakenList.add(timeTaken);
 
-                double area = obj2.calculateArea(side1, side2, side3);
-                System.out.println(ANSI_GREEN + "Area of this triangle is " + area + "cm sq" + ANSI_RESET);
-                System.out.println(" ");
+                int side1 = obj3.side1;
+                int side2 = obj3.side2;
+                int side3 = obj3.side3;
 
-                shapeInfoList.add("Triangle: " + side1 + ", " + side2 + ", " + side3);
-                shapeAreas.put("Triangle", area);
+                String canForm = obj2.isTriangle(side1, side2, side3);
+                if (canForm.equals("true")) {
+                    obj2.drawTriangle(side1, side2, side3);
+                    double area = obj2.calculateArea(side1, side2, side3);
+                    System.out.println(ANSI_GREEN + "Area of this triangle is " + area + "cm sq" + ANSI_RESET);
+                    System.out.println(" ");
 
-                if (area > largestArea) {
-                    largestArea = area;
-                    largestShape = "Triangle";
+                    shapeInfoList.add("Triangle: " + side1 + ", " + side2 + ", " + side3);
+                    shapeAreas.put("Triangle", area);
+
+                    if (area > largestArea) {
+                        largestArea = area;
+                        largestShape = "Triangle";
+                    }
+
+                    // calculates angles of the triangle for adding them to the ShapeInfo text file
+                    double angle1 = obj2.calculateAngle(side1, side2, side3);
+                    double angle2 = obj2.calculateAngle(side2, side3, side1);
+                    double angle3 = obj2.calculateAngle(side3, side1, side2);
+
+                    triangleAngles.add(angle1);
+                    triangleAngles.add(angle2);
+                    triangleAngles.add(angle3);
+
+                    // update shape counts
+                    shapeCounts.put("Triangle", shapeCounts.getOrDefault("Triangle", 0) + 1);
+                } else {
+                    System.out.println(" ");
+                    System.out.println(ANSI_RED + "Triangle cannot be formed with the given sides." + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Use Another QR Code." + ANSI_RESET);
+                    System.out.println(" ");
                 }
-
-                // calculates angles of the triangle for adding them to the ShapeInfo text file
-                double angle1 = obj2.calculateAngle(side1, side2, side3);
-                double angle2 = obj2.calculateAngle(side2, side3, side1);
-                double angle3 = obj2.calculateAngle(side3, side1, side2);
-
-                triangleAngles.add(angle1);
-                triangleAngles.add(angle2);
-                triangleAngles.add(angle3);
-
-                // update shape counts
-                shapeCounts.put("Triangle", shapeCounts.getOrDefault("Triangle", 0) + 1);
-            } else {
-                System.out.println(" ");
-                System.out.println(ANSI_RED + "Triangle cannot be formed with the given sides." + ANSI_RESET);
-                System.out.println(ANSI_RED + "Use Another QR Code." + ANSI_RESET);
-                System.out.println(" ");
             }
+
+        } else {
+            System.out.println(" ");
+            System.out.println("Use A QR Code.");
+            System.out.println(" ");
         }
+
         System.out.println(ANSI_CYAN + "Select an option:");
         System.out.println(ANSI_CYAN + "1. Press A to Scan the QR Code");
         System.out.println(ANSI_CYAN + "2. Press X to Generate the Text File and Exit" + ANSI_CYAN);
