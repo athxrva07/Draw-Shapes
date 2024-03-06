@@ -21,7 +21,8 @@ public class QRCode {
     public int side1;    // first side length for triangle
     public int side2;    // second side length for triangle
     public int side3;    // third side length for triangle
-    public String shape; 
+    public String shape;
+    public String Continue;
 
     // method to decode the QR code
     public void decodeQR() {
@@ -33,6 +34,7 @@ public class QRCode {
             String decodedText = API.decodeQRImage(img);
     
             if (!decodedText.isEmpty()) {
+                Continue = "true";
                 // splits the decoded text
                 String[] parts = decodedText.split(" ");
     
@@ -69,6 +71,7 @@ public class QRCode {
                     System.out.println(" ");
                 }
             } else {
+                Continue = "false";
                 System.out.println(" ");
                 System.out.println(ANSI_RED + "No QR Code Found" + ANSI_RESET);
                 System.out.println(" ");
