@@ -6,4 +6,4 @@ This is my first year comp sci project. Swiftbot (a raspberry pi robot ) scans a
 #### Compile All Files Toegther: 
     javac -cp "SwiftBotAPI-5.1.0.jar" *.java
 #### Run the Main File: 
-    java -cp ".:SwiftBotAPI-5.1.0.jar" Main
+    java -cp "SwiftBotAPI-5.1.0.jar": Main.java
