@@ -1,76 +1,69 @@
+import swiftbot.*;
+import java.util.*;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import swiftbot.*;
 
 public class Main {
-
-    // defines lists and maps to store shape information
-    static List<String> shapeInfoList = new ArrayList<>();
-    static List<Double> triangleAngles = new ArrayList<>();
-    static Map<String, Double> shapeAreas = new HashMap<>();
-    static String largestShape = "";
+    static List<String> shapeInfo = new ArrayList<>(); // stores name of the shape along with side
+    static List<Long> timeTakenList = new ArrayList<>(); // stores time taken for drawing each shape
+    static List<Double> triangleAngles = new ArrayList<>(); // stores the angles of triangle drawn
+    static Map<String, Integer> shapeCount = new HashMap<>(); // stores how many time each shape is drawn
+    static Map<String, Double> shapeAreas = new HashMap<>(); // stores area of each shape drawn
+    static String largestShapeDrawn = "";
     static double largestArea = Double.MIN_VALUE;
-    static Map<String, Integer> shapeCounts = new HashMap<>();
-    static List<Long> timeTakenList = new ArrayList<>(); // list to store time taken for drawing each shape
 
     public static void main(String[] args) {
 
-        // initializes SwiftBotAPI and other necessary objects
         SwiftBotAPI API = new SwiftBotAPI();
-        Square obj1 = new Square(API);
-        Triangle obj2 = new Triangle(API);
-        QRCode obj3 = new QRCode(API);
+        Square square = new Square(API);
+        Triangle triangle = new Triangle(API);
+        QRCode qrcode = new QRCode(API);
 
         // ANSI color codes for colored output
-        final String ANSI_CYAN = "\u001B[36m";
-        final String ANSI_GREEN = "\u001B[32m";
-        final String ANSI_RED = "\u001B[31m";
-        final String ANSI_RESET = "\u001B[0m";
+        final String GREEN = "\u001B[32m";
+        final String CYAN = "\u001B[36m";
+        final String RED = "\u001B[31m";
+        final String RESET = "\u001B[0m";
 
-        // displays the welcome message
+        // display the welcome message
         System.out.println();
-        System.out.println(ANSI_CYAN + "******************************************************");
-        System.out.println(ANSI_CYAN + "*                 Welcome to Swiftbot                *");
-        System.out.println(ANSI_CYAN + "******************************************************");
+        System.out.println(GREEN + "======================================================");
+        System.out.println(GREEN + "                  Welcome to Swiftbot                 ");
+        System.out.println(GREEN + "======================================================");
         System.out.println(" ");
-        System.out.println(ANSI_CYAN + "Press Button A to Scan the QR Code" + ANSI_RESET);
+        System.out.println(GREEN + "Press Button A to Scan the QR Code" + RESET);
+        System.out.println(GREEN + "Press Button X to Terminate" + RESET);
 
         API.enableButton(Button.A, () -> {
 
             System.out.println(" ");
-            System.out.println("Button A Has Been Pressed");
+            System.out.println(GREEN + "Button A has been pressed." + RESET);
 
-            // executes case 1 when button A is pressed. This scans the QR code, decodes it
-            // and draws the shape accordingly.
-            executeCase1(obj1, obj2, obj3, ANSI_CYAN, ANSI_GREEN, ANSI_RED, ANSI_RESET);
+            // when button A is pressed, this method scans the QR code, decodes it and draws
+            // the shape
+            case1(square, triangle, qrcode, CYAN, GREEN, RED, RESET);
         });
 
         API.enableButton(Button.X, () -> {
 
-            System.out.println("Button X Has Been Pressed");
+            System.out.println("Button X has been pressed.");
 
-            // executes case 2 when button X is pressed. This creates the text file to store
-            // shape information and then terminates the program
-            executeCase2();
+            // when button X is pressed, this method creates the text file to store shape
+            // information and then terminates the program
+            case2();
         });
 
-        // main loop to handle user input
         while (true) {
         }
     }
 
-    // Method to execute case 1
-    private static void executeCase1(Square obj1, Triangle obj2, QRCode obj3, String ANSI_CYAN, String ANSI_GREEN,
-            String ANSI_RED, String ANSI_RESET) {
+    private static void case1(Square square, Triangle triangle, QRCode qrcode, String CYAN, String GREEN, String RED,
+            String RESET) {
 
         // calls the decodeQR() method from the QRCode class file
-        obj3.decodeQR();
-        String shape = obj3.shape;
-        String Continue = obj3.Continue;
+        qrcode.decodeQR();
+        String shape = qrcode.shape;
+        String Continue = qrcode.Continue;
 
         if ("true".equals(Continue)) {
 
@@ -79,12 +72,12 @@ public class Main {
 
             if ("S".equals(shape)) {
 
-                int sideSquare = obj3.side;
+                int side = qrcode.sideLength;
 
                 // checks if side is greater than 15 and less than 85 or not and draws the
                 // square if it is
-                if (sideSquare > 15 && sideSquare < 85) {
-                    obj1.drawSquare(sideSquare);
+                if (side > 15 && side < 85) {
+                    square.drawSquare(side);
 
                     // records the end time after drawing the shape
                     long endTime = System.currentTimeMillis();
@@ -93,34 +86,35 @@ public class Main {
                     // adds the time taken to the list
                     timeTakenList.add(timeTaken);
 
-                    double area = sideSquare * sideSquare;
-                    System.out.println(ANSI_GREEN + "Area of this square is " + area + "cm sq" + ANSI_RESET);
+                    double areaSquare = side * side;
+                    System.out.println(" ");
+                    System.out.println(CYAN + "Area of this square is " + areaSquare + "cm sq" + RESET);
                     System.out.println(" ");
 
-                    shapeInfoList.add("Square: " + sideSquare);
-                    shapeAreas.put("Square", area);
+                    shapeInfo.add("Square: " + side);
+                    shapeAreas.put("Square", areaSquare);
 
-                    if (area > largestArea) {
-                        largestArea = area;
-                        largestShape = "Square";
+                    if (areaSquare > largestArea) {
+                        largestArea = areaSquare;
+                        largestShapeDrawn = "Square";
                     }
-                    // updates shape counts
-                    shapeCounts.put("Square", shapeCounts.getOrDefault("Square", 0) + 1);
+                    // updates shape counts and increases it by 1 each time it is drawn
+                    shapeCount.put("Square", shapeCount.getOrDefault("Square", 0) + 1);
                 } else {
                     System.out.println(" ");
-                    System.out.println(ANSI_RED + "The Sides Should Be Between 15 and 85" + ANSI_RESET);
+                    System.out.println(RED + "The sides should Be between 15 and 85" + RESET);
                     System.out.println(" ");
                 }
             } else if ("T".equals(shape)) {
 
-                int side1 = obj3.side1;
-                int side2 = obj3.side2;
-                int side3 = obj3.side3;
+                int side1 = qrcode.side1Length;
+                int side2 = qrcode.side2Length;
+                int side3 = qrcode.side3Length;
 
-                String canForm = obj2.isTriangle(side1, side2, side3);
+                String canForm = triangle.isTriangle(side1, side2, side3);
                 if (canForm.equals("true")) {
-                    obj2.drawTriangle(side1, side2, side3);
-                    double area = obj2.calculateArea(side1, side2, side3);
+                    triangle.drawTriangle(side1, side2, side3);
+                    double area = triangle.triangleArea(side1, side2, side3);
 
                     // records the end time after drawing the shape
                     long endTime = System.currentTimeMillis();
@@ -129,64 +123,62 @@ public class Main {
                     // adds the time taken to the list
                     timeTakenList.add(timeTaken);
 
-                    System.out.println(ANSI_GREEN + "Area of this triangle is " + area + "cm sq" + ANSI_RESET);
+                    System.out.println(" ");
+                    System.out.println(CYAN + "Area of this triangle is " + area + "cm sq" + RESET);
                     System.out.println(" ");
 
-                    shapeInfoList.add("Triangle: " + side1 + ", " + side2 + ", " + side3);
+                    shapeInfo.add("Triangle: " + side1 + ", " + side2 + ", " + side3);
                     shapeAreas.put("Triangle", area);
 
                     if (area > largestArea) {
                         largestArea = area;
-                        largestShape = "Triangle";
+                        largestShapeDrawn = "Triangle";
                     }
 
-                    // calculates angles of the triangle for adding them to the ShapeInfo text file
-                    double angle1 = obj2.calculateAngle(side1, side2, side3);
-                    double angle2 = obj2.calculateAngle(side2, side3, side1);
-                    double angle3 = obj2.calculateAngle(side3, side1, side2);
+                    // calculate and add angles of the triangle for adding them to the ShapeInfo
+                    // text file
+                    double angle1 = triangle.triangleAngle(side1, side2, side3);
+                    double angle2 = triangle.triangleAngle(side2, side3, side1);
+                    double angle3 = triangle.triangleAngle(side3, side1, side2);
 
                     triangleAngles.add(angle1);
                     triangleAngles.add(angle2);
                     triangleAngles.add(angle3);
 
-                    // update shape counts
-                    shapeCounts.put("Triangle", shapeCounts.getOrDefault("Triangle", 0) + 1);
+                    // update shape counts and increase it by 1 each time it is drawn
+                    shapeCount.put("Triangle", shapeCount.getOrDefault("Triangle", 0) + 1);
                 } else {
                     System.out.println(" ");
-                    System.out.println(ANSI_RED + "Triangle cannot be formed with the given sides." + ANSI_RESET);
-                    System.out.println(ANSI_RED + "Use Another QR Code." + ANSI_RESET);
+                    System.out.println(RED + "Triangle cannot be formed with the given sides." + RESET);
+                    System.out.println(RED + "Use Another QR Code." + RESET);
                     System.out.println(" ");
                 }
             }
         } else {
             System.out.println("Use a QR Code");
+            System.out.println(" ");
         }
-        System.out.println(ANSI_CYAN + "Select an option:");
-        System.out.println(ANSI_CYAN + "1. Press A to Scan the QR Code");
-        System.out.println(ANSI_CYAN + "2. Press X to Generate the Text File and Exit" + ANSI_CYAN);
+        System.out.println(GREEN + "1. Press A to scan the QR code");
+        System.out.println(GREEN + "2. Press X to generate the text file and exit" + RESET);
     }
 
-    // method to execute case 2
-    private static void executeCase2() {
-        // if button X is pressed, exit the program and write accumulated information to
-        // a file
-        final String ANSI_CYAN = "\u001B[36m";
-        final String ANSI_GREEN = "\u001B[32m";
-        final String ANSI_RED = "\u001B[31m";
-        final String ANSI_RESET = "\u001B[0m";
-        final String ANSI_YELLOW = "\u001B[33m";
+    private static void case2() {
+        // if button X is pressed, exit the program and write THE information to a file
+        final String YELLOW = "\u001B[33m";
+        final String GREEN = "\u001B[32m";
+        final String RED = "\u001B[31m";
+        final String RESET = "\u001B[0m";
 
         System.out.println(" ");
-        System.out.println(ANSI_YELLOW + "Shape Information File Generated" + ANSI_RESET);
-        System.out.println(" ");
-        System.out.println(ANSI_CYAN + "Program Terminated" + ANSI_CYAN);
+        System.out.println(YELLOW + "Text file is generated" + RESET);
+        System.out.println(GREEN + "Program Terminated" + GREEN);
 
         try {
             PrintWriter writer = new PrintWriter(new FileWriter("ShapeInfo.txt", true));
             writer.println("Shapes Drawn:");
-            for (String info : shapeInfoList) {
+            for (String info : shapeInfo) {
                 if (info.startsWith("Triangle")) {
-                    StringBuilder triangleInfo = new StringBuilder(info);
+                    StringBuilder trianglesInfo = new StringBuilder(info);
                     StringBuilder anglesInfo = new StringBuilder(" (Angles: ");
                     for (int i = 0; i < 3; i++) {
                         double angle = triangleAngles.remove(0);
@@ -196,38 +188,37 @@ public class Main {
                         }
                     }
                     anglesInfo.append(")");
-                    triangleInfo.append(anglesInfo);
-                    writer.println(triangleInfo);
+                    trianglesInfo.append(anglesInfo);
+                    writer.println(trianglesInfo);
                 } else {
                     writer.println(info);
                 }
             }
 
-            writer.println("Largest Shape Drawn: " + largestShape + " (Area: " + largestArea + ")");
+            writer.println("Largest shape drawn shape is " + largestShapeDrawn + " (Area: " + largestArea + ")");
 
             int maxCount = 0;
             String mostFrequentShape = "";
-            for (Map.Entry<String, Integer> entry : shapeCounts.entrySet()) {
+            for (Map.Entry<String, Integer> entry : shapeCount.entrySet()) {
                 if (entry.getValue() > maxCount) {
                     maxCount = entry.getValue();
                     mostFrequentShape = entry.getKey();
                 }
             }
-            writer.println(
-                    "Most Frequently Drawn Shape: " + mostFrequentShape + " (" + maxCount + " Times)");
+            writer.println("Most frequently drawn shape is " + mostFrequentShape + " (" + maxCount + " Times)");
 
-            // calculates average time taken to draw
+            // calculate the average time taken to draw
             long total = 0;
             for (long time : timeTakenList) {
                 total += time;
             }
             double averageTime = (double) total / timeTakenList.size();
-
-            writer.println("Average Time Taken to Draw: " + averageTime + " milliseconds");
+            writer.println("Average time taken to draw is " + averageTime + " milliseconds");
 
             writer.close();
+
         } catch (Exception e) {
-            System.out.println(ANSI_RED + "Error occurred while writing to file: " + e.getMessage() + ANSI_RESET);
+            System.out.println(RED + "Error occurred while writing to file: " + e.getMessage() + RESET);
         }
         System.exit(0);
     }
